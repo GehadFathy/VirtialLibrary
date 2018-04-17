@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.library.sw_library.Views.activity_book"
+    tools:showIn="@layout/activity_book">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="176dp"
+        android:layout_height="259dp"
+        android:src="@android:color/background_light"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="331dp"
+        android:layout_height="140dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="295dp" />
+
+    <TextView
+        android:id="@+id/authorTextView"
+        android:layout_width="155dp"
+        android:layout_height="61dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="114dp" />
+
+    <TextView
+        android:id="@+id/categoryTextView"
+        android:layout_width="155dp"
+        android:layout_height="61dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="191dp" />
+
+    <TextView
+        android:id="@+id/linkTextView"
+        android:layout_width="155dp"
+        android:layout_height="61dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="36dp" />
+
+
+</android.support.constraint.ConstraintLayout>
