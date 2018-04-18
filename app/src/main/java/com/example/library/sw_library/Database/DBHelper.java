@@ -7,18 +7,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.library.sw_library.Network.GoogleApiRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /*
 class to manage data base
@@ -34,15 +33,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
+        context.deleteDatabase("Library.db");
 
         db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
 
-        /*db.execSQL("create table Shelf (id integer primary key, category_id integer ,num_of_books integer," +
-                " foreign key (category_id) references Category(id));");*/
-        db.execSQL("create table Book (id integer primary key, title text, authors text, category_id integer," +
+        db.execSQL("create table Book (id integer primary key, title     text, authors text, category_id integer," +
                 " foreign key (category_id) references Category(id)); ");
         db.execSQL("create table Admin (id integer primary key, name text,email text,pwd text);" );
-
 
 
     }
@@ -61,94 +58,83 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("insert into Category (name) values ('fiction'),('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
                 "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
-        /*db.execSQL("insert into Book (title,author,category_id) values ('gehadbook', 'mennaselim',1)");
-        db.execSQL("insert into Book (title,author,category_id) values ('gehadbook2', 'mennaselim2',1)");*/
 
     }
-    public void fillBooksFromAPI(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=subject:" ;
+    public Map<Integer,String> getCategories(){
 
-        try{
-            HttpURLConnection connection = null;
-            // Build Connection.
-            try{
-                URL url = new URL(apiUrlString);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setReadTimeout(5000); // 5 seconds
-                connection.setConnectTimeout(5000); // 5 seconds
-            } catch (MalformedURLException e) {
-                // Impossible: The only two URLs used in the app are taken from string resources.
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                // Impossible: "GET" is a perfectly valid request method.
-                e.printStackTrace();
-            }
-            int responseCode = connection.getResponseCode();
-            if(responseCode != 200){
-                Log.w(getClass().getName(), "GoogleBooksAPI request failed. Response Code: " + responseCode);
-                connection.disconnect();
-            }
+        SQLiteDatabase db = this.getReadableDatabase();
+        Map<Integer,String> categories = new HashMap<Integer,String>();
+        Cursor resultSet = db.rawQuery("Select * from Category",null);
 
-            // Read data from response.
-            StringBuilder builder = new StringBuilder();
-            BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = responseReader.readLine();
-            while (line != null){
-                builder.append(line);
-                line = responseReader.readLine();
+        if (resultSet != null) {
+            if (resultSet.moveToFirst()) {
+                do {
+                    String category = resultSet.getString(resultSet.getColumnIndex("name"));
+                    int id = resultSet.getInt(resultSet.getColumnIndex("id"));
+                    categories.put(id,category);
+                    Log.e("Category:::::: ",category);
+                } while (resultSet.moveToNext());
             }
-            String responseString = builder.toString();
-            Log.d(getClass().getName(), "Response String: " + responseString);
-            JSONObject responseJson = new JSONObject(responseString);
-            JSONArray booksArray = responseJson.getJSONArray("items");
-            for (int i=0 ; i<booksArray.length();i++){
-                JSONObject book =(JSONObject) booksArray.get(i);
-                JSONObject volumeInfo=book.getJSONObject("volumeInfo");
-                String title = volumeInfo.getString("title");
-                JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                String authors = "" ;
-                for (int k=0 ; k<authorsArray.length();k++){
-                    authors+=authorsArray.get(i);
+        }
+
+
+    return categories ;
+    }
+
+
+    public void fillBooksFromAPI() throws JSONException {
+
+        Map <Integer,String> categories =getCategories();
+        Iterator<Integer> itr = categories.keySet().iterator();
+        while(itr.hasNext()){
+            final int catId = itr.next();
+            String catName =categories.get(catId);
+            new GoogleApiRequest(catName ,new GoogleApiRequest.AsyncResponse(){
+                @Override
+                public void processFinish(JSONObject output) throws JSONException {
+                    JSONObject responseJson=output ;
+
+                    Log.e("Network", "Network:: fillBooksFromAPI: "+responseJson );
+                    JSONArray booksArray = responseJson.getJSONArray("items");
+                    SQLiteDatabase db =DBHelper.super.getWritableDatabase();
+                    for (int i=0 ; i<booksArray.length();i++){
+                        JSONObject book =(JSONObject) booksArray.get(i);
+                        JSONObject volumeInfo=book.getJSONObject("volumeInfo");
+                        String title = volumeInfo.getString("title");
+                        JSONArray authorsArray = volumeInfo.getJSONArray("authors");
+                        Log.e("aaa", "processFinish: "+title );
+                        String authors = "" ;
+                        for (int k=0 ; k<authorsArray.length();k++){
+                            authors+=authorsArray.get(i);
+                        }
+                        String changedAuthors = authors.replace("'","''");
+                        String changedTitle = title.replace("'","''");
+
+                        db.execSQL( "insert into Book values (null,\'"+title+"\',\'" +changedAuthors+ "\',"+catId+");");
+
+                    }
+
                 }
-                db.execSQL("insert into Book (title,author,category_id) values ("+title+"," +authors+"'*',1)");
-                Log.e("BOOKS","insert into Book (title,author,category_id) values ("+title+"," +authors+"'*',1)");
 
-            }
-            // Close connection and return response code.
-            connection.disconnect();
-        } catch (SocketTimeoutException e) {
-            Log.w(getClass().getName(), "Connection timed out. Returning null");
-        } catch(IOException e){
-            Log.d(getClass().getName(), "IOException when connecting to Google Books API.");
-            e.printStackTrace();
-
-        } catch (JSONException e) {
-            Log.d(getClass().getName(), "JSONException when connecting to Google Books API.");
-            e.printStackTrace();
+            }).execute();
         }
 
     }
 
-    public /*List<BookModel>*/ void getBooks(int categoryID){
+    //todo
+    public void getBooks(int categoryID){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor resultSet = db.rawQuery("Select * from Book where category_id=1",null);
+        Cursor resultSet = db.rawQuery("Select * from Book where category_id="+categoryID,null);
 
         if (resultSet != null) {
             if (resultSet.moveToFirst()) {
                 do {
                     String book1 = resultSet.getString(resultSet.getColumnIndex("name"));
-                    Toast.makeText(context,book1 , Toast.LENGTH_SHORT).show();
-
+                    Log.e("books", "getBooks: "+book1 );
                 } while (resultSet.moveToNext());
             }
         }
-       /* Log.e("TAG","********************");
-        Log.e("TAG","Book: "+ book1);
-
-        System.out.println(book1);*/
 
 
     }
