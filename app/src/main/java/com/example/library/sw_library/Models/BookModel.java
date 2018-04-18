@@ -22,9 +22,9 @@ public class BookModel {
     private String name, authorName;
     private int categoryID;
 
-    public JSONObject getBookJSONObject(String... isbns) throws BadRequestException {
+    public JSONObject getBookJSONObject(String bookTitle) throws BadRequestException {
 
-        String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + isbns[0] + "&filter:free-ebooks&printType:books";
+        String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + bookTitle + "&filter:free-ebooks&printType:books";
         try{
             HttpURLConnection connection = null;
             // Build Connection.

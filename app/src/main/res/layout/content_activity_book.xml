@@ -27,23 +27,31 @@
     <TextView
         android:id="@+id/authorTextView"
         android:layout_width="155dp"
-        android:layout_height="61dp"
+        android:layout_height="50dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="213dp"
-        tools:layout_editor_absoluteY="114dp" />
+        tools:layout_editor_absoluteY="86dp" />
 
     <TextView
         android:id="@+id/categoryTextView"
         android:layout_width="155dp"
-        android:layout_height="61dp"
+        android:layout_height="50dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="213dp"
-        tools:layout_editor_absoluteY="191dp" />
+        tools:layout_editor_absoluteY="186dp" />
+
+    <TextView
+        android:id="@+id/ISBNTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="136dp" />
 
     <TextView
         android:id="@+id/linkTextView"
         android:layout_width="155dp"
-        android:layout_height="61dp"
+        android:layout_height="50dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="213dp"
         tools:layout_editor_absoluteY="36dp" />
