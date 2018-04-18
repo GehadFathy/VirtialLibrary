@@ -1,17 +1,14 @@
 package com.example.library.sw_library.Views;
 
-import com.example.library.sw_library.Models.*;
-import com.example.library.sw_library.R;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.library.sw_library.Network.GoogleApiRequest;
+import com.example.library.sw_library.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,25 +28,14 @@ public class BookViewActivity extends AppCompatActivity {
 
         String bookTitle = getIntent().getExtras().getString("title");
 
-        BookModel bookModel = new BookModel();
-        try {
-            JSONObject bookInfo = bookModel.getBookJSONObject(bookTitle);
-            displayBook(bookInfo);
-        } catch (BookModel.BadRequestException e) {
-            e.printStackTrace();
-        }
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
+        Log.d("BookView", "onCreateBook: "+bookTitle );
+       String apiUrlString="https://www.googleapis.com/books/v1/volumes?q=intitle:" + bookTitle + "&filter:free-ebooks&printType:books";
+        new GoogleApiRequest(apiUrlString ,new GoogleApiRequest.AsyncResponse(){
+            @Override
+            public void processFinish(JSONObject output) throws JSONException {
+                displayBook(output);
+                Log.d(this.toString(), "BookResponse: "+output);
+            }}).execute();
 
 
     }
@@ -72,6 +58,7 @@ public class BookViewActivity extends AppCompatActivity {
             String imageURL = (String) volumeInfo.getJSONObject("imageLinks").get("smallThumbnail");
             String previewLink = (String) volumeInfo.get("previewLink");
 
+            Log.d("RESPONSE", "displayBook: ");
             setImage(imageURL);
             TextView titleTV = (TextView) findViewById(R.id.titleTextView);
             titleTV.setText("Title: " + title);

@@ -21,17 +21,16 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
     }
 
     public AsyncResponse delegate = null;
-    private String category;
+    private String apiUrlString;
 
-    public GoogleApiRequest(String category,AsyncResponse delegate){
-        this.category=category;
+    public GoogleApiRequest(String apiUrlString,AsyncResponse delegate){
+        this.apiUrlString=apiUrlString;
         this.delegate = delegate;
 
     }
     @Override
     protected JSONObject doInBackground(String... strings) {
 
-        String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=subject:"+category;
         Log.e("Network", "Network:: in start: "+apiUrlString);
 
         JSONObject responseJson = new JSONObject();
@@ -57,26 +56,33 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
             }
             int responseCode = connection.getResponseCode();
             Log.e("Network", "Network:: code "+responseCode);
-
+            Log.e("Network", "Network:: code "+responseCode);
+/*
             if(responseCode != 200){
                 Log.w(getClass().getName(), "GoogleBooksAPI request failed. Response Code: " + responseCode);
                 connection.disconnect();
                 return null;
-            }
+            }*/
 
             // Read data from response.
             StringBuilder builder = new StringBuilder();
+            Log.e("Network", "Network:: after builder ");
+
+
             BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
             String line = responseReader.readLine();
+            Log.e("Network", "Network:: after line "+line);
             while (line != null){
                 builder.append(line);
                 line = responseReader.readLine();
             }
-            String responseString = builder.toString();
-            Log.d(getClass().getName(), "Network:: Response String: " + responseString);
-            responseJson = new JSONObject(responseString);
+            Log.e("Network", "Network:: after xxx "+builder);
+
+            responseJson = new JSONObject(builder.toString());
             // Close connection and return response code.
             connection.disconnect();
+            Log.e("Network", "Network:: Response String: "+ responseJson );
             return responseJson;
         } catch (SocketTimeoutException e) {
             Log.w(getClass().getName(), "Connection timed out. Returning null");
@@ -94,6 +100,7 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
     }
         @Override
     protected void onPostExecute(JSONObject jsonObject) {
+            Log.d("bbb", "***************");
             try {
                 delegate.processFinish(jsonObject);
             } catch (JSONException e) {

@@ -110,7 +110,8 @@ public class DBHelper extends SQLiteOpenHelper {
         while(itr.hasNext()){
             final int catId = itr.next();
             String catName =categories.get(catId);
-            new GoogleApiRequest(catName ,new GoogleApiRequest.AsyncResponse(){
+            String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=subject:"+catName;
+            new GoogleApiRequest(apiUrlString ,new GoogleApiRequest.AsyncResponse(){
                 @Override
                 public void processFinish(JSONObject output) throws JSONException {
                     JSONObject responseJson=output ;
@@ -157,6 +158,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
             }).execute();
         }
+
+    }
+
+    public void getBook() {
+        Log.d("BookView", "onCreateBook: christmast" );
+        String apiUrlString="https://www.googleapis.com/books/v1/volumes?q=intitle:Childcraft&filter:free-ebooks&printType:books";
+         new GoogleApiRequest(apiUrlString ,new GoogleApiRequest.AsyncResponse(){
+            @Override
+            public void processFinish(JSONObject output) throws JSONException {
+                Log.d(this.toString(), "BookResponse: "+output);
+            }}).execute();
 
     }
 

@@ -22,14 +22,13 @@ public class MainActivity extends AppCompatActivity {
         mydb.fillCategory();
         mydb.getCategories();
         mydb.initialFillBooks();
-
-        mydb.getBooks(3,"Romance");
+//        mydb.getBook();
         mydb.close();
         Toast.makeText(this,"to swtich",Toast.LENGTH_SHORT).show();
-//        Intent intent=new Intent(MainActivity.this,ShelvesViewActivity.class);
-//        intent.putExtra("id",1);
-//        intent.putExtra("name","Math");
-//        startActivity(intent);
+        Intent intent=new Intent(MainActivity.this,ShelvesViewActivity.class);
+        intent.putExtra("id",1);
+        intent.putExtra("name","Math");
+         startActivity(intent);
 
 
     }

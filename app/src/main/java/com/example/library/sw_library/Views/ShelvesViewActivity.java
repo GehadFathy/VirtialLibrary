@@ -1,14 +1,18 @@
 package com.example.library.sw_library.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.Models.BookModel;
@@ -20,7 +24,7 @@ public class ShelvesViewActivity extends AppCompatActivity {
 
     private int categoryID ;
     private String categoryName;
-    private int no_of_books_in_shelf=5;
+    private int no_of_books_in_shelf=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class ShelvesViewActivity extends AppCompatActivity {
         Log.e("Gehad", "num: "+books.size()+" "+numCol+ " "+numRow);
 
         TableLayout tblLayout = findViewById(R.id.tblLayout);
-
+        int bookCounter=0;
         for(int i = 0; i < numRow; i++) {
             //for shelf scroll
             HorizontalScrollView HSV = new HorizontalScrollView(this);
@@ -55,12 +59,21 @@ public class ShelvesViewActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(this);
                 imageView.setImageResource(R.drawable.new_book);
 
+                final String name=books.get(bookCounter++).getName();
                 TextView textView = new TextView(this);
-                textView.setText("Java Tester");
-                textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT));
-
-                tblRow.addView(imageView,j);
+                textView.setText(name);
+                textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                textView.setBackgroundResource(R.drawable.new_book);
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getBaseContext(),"clicked",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ShelvesViewActivity.this,BookViewActivity.class);
+                        intent.putExtra("title",name);
+                        startActivity(intent);
+                    }
+                });
+                tblRow.addView(textView,j);
             }
 
             HSV.addView(tblRow);
