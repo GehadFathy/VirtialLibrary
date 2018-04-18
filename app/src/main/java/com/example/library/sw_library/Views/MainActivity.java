@@ -18,22 +18,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.deleteDatabase("Library");
 
-        DBHelper mydb = new DBHelper(this);
+        DBHelper mydb =DBHelper.getInstance(this);
         mydb.fillCategory();
         mydb.getCategories();
-        try {
-            mydb.fillBooksFromAPI();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mydb.initialFillBooks();
+
+        mydb.getBooks(3,"Romance");
         mydb.close();
         Toast.makeText(this,"to swtich",Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(this,ShelvesViewActivity.class);
-        intent.putExtra("id",1);
-        intent.putExtra("name","Math");
-
-        startActivity(intent);
-        //
+//        Intent intent=new Intent(MainActivity.this,ShelvesViewActivity.class);
+//        intent.putExtra("id",1);
+//        intent.putExtra("name","Math");
+//        startActivity(intent);
 
 
     }

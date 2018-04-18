@@ -26,13 +26,12 @@ public class ShelvesViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelf);
-
-        categoryID = getIntent().getExtras().getInt("id");
+        categoryID =  getIntent().getExtras().getInt("id");
         categoryName = getIntent().getExtras().getString("name");
         Log.e("Gehad", "Extras: "+categoryID+ " "+categoryName);
 
 
-        DBHelper dbHelper=new DBHelper(this);
+        DBHelper dbHelper =DBHelper.getInstance(this);
         List<BookModel> books = dbHelper.getBooks(categoryID,categoryName);
         int numCol = no_of_books_in_shelf;
         int numRow = books.size()/numCol;

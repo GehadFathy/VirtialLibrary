@@ -1,3 +1,4 @@
+
 package com.example.library.sw_library.Database;
 
 import android.content.Context;
@@ -25,24 +26,30 @@ class to manage data base
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static  DBHelper instance = null;
 
-    public Context context;
-    public DBHelper(Context context){
+    private DBHelper(Context context){
         super(context,"Library",null,1);
-        this.context=context;
+        Log.e("DBhelper", "created!!: " );
+
+    }
+
+    public static DBHelper getInstance(Context context){
+        if (instance==null)
+            instance=new DBHelper(context);
+        return instance ;
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        context.deleteDatabase("Library.db");
 
         db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
-
-        db.execSQL("create table Book (id integer primary key, title     text, authors text, category_id integer," +
+        db.execSQL("create table Book (id integer primary key, title text, authors text, category_id integer," +
                 " foreign key (category_id) references Category(id)); ");
         db.execSQL("create table Admin (id integer primary key, name text,email text,pwd text);" );
 
-
     }
+
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -55,11 +62,22 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Category (name) values('Math')");/*,('Drama'),('Romance')," +
+        db.execSQL("insert into Category (name) values('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
-                "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");*/
+                "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
 
     }
+    public void initialFillBooks()  {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("insert into Book values (null,'Childcraft','null',1);");
+        db.execSQL("insert into Book values (null,'Christmast','Holly Berry-Byrd',1);");
+        db.execSQL("insert into Book values (null,'A Common Stage','Carol Symes',2);");
+        db.execSQL("insert into Book values (null,'Macbeth','William Shakespeare',2);");
+        db.execSQL("insert into Book values (null,'Man and Superman','George Bernard Shaw',2);");
+        db.execSQL("insert into Book values (null,'Fawcetta','Dalian Artanian',3);");
+        db.execSQL("insert into Book values (null,'Dare to Love','Carly Phillips',3);");
+    }
+
     public Map<Integer,String> getCategories(){
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -79,15 +97,15 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             Log.e("Category:::::: ","No category");
 
-
-
         return categories ;
     }
 
 
     public void fillBooksFromAPI() throws JSONException {
 
+        //get all categories
         Map <Integer,String> categories =getCategories();
+        /*for each category : access google API to get books for it*/
         Iterator<Integer> itr = categories.keySet().iterator();
         while(itr.hasNext()){
             final int catId = itr.next();
@@ -98,27 +116,41 @@ public class DBHelper extends SQLiteOpenHelper {
                     JSONObject responseJson=output ;
 
                     Log.e("Network", "Network:: fillBooksFromAPI: "+responseJson );
-                    JSONArray booksArray = responseJson.getJSONArray("items");
-                    SQLiteDatabase db =DBHelper.super.getWritableDatabase();
-                    for (int i=0 ; i<booksArray.length();i++){
-                        JSONObject book =(JSONObject) booksArray.get(i);
-                        JSONObject volumeInfo=book.getJSONObject("volumeInfo");
-                        String title = volumeInfo.getString("title");
-                        JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                        Log.e("aaa", "processFinish: "+title );
-                        String authors = "" ;
-                        for (int k=0 ; k<authorsArray.length();k++){
-                            String author = (String) authorsArray.get(i);
-                            author.replaceAll(","," ");
-                            authors+= author;
-                            if (k!= authorsArray.length()-1)
-                                authors += ',';
+                    if (responseJson.has("items")) {
+                        Log.e("fillBooksFromAPI", "fillBooksFromAPI: items"+  responseJson.get("items"));
+                        JSONArray booksArray = responseJson.getJSONArray("items");
+                        SQLiteDatabase db = DBHelper.super.getWritableDatabase();
+                        Log.e("fillBooksFromAPI", "fillBooksFromAPI: arraylen"+booksArray.length() );
+                        for (int i = 0; i < booksArray.length(); i++) {
+                            JSONObject book = (JSONObject) booksArray.get(i);
+                            if (book.has("volumeInfo")) {
+
+                                String title ="",author="",changedAuthors="",changedTitle="";
+                                JSONObject volumeInfo = book.getJSONObject("volumeInfo");
+                                if (volumeInfo.has("title")) {
+                                    title = volumeInfo.getString("title");
+                                    changedTitle = title.replace("'", "''");
+                                    Log.e("fillBooksFromAPI", "fillBooksFromAPI: title "+title );
+                                }
+                                if (volumeInfo.has("authors")) {
+                                    JSONArray authorsArray = volumeInfo.getJSONArray("authors");
+                                    Log.e("aaa", "processFinish: " + title);
+                                    String authors = "";
+                                    for (int k = 0; k < authorsArray.length(); k++) {
+                                        author = (String) authorsArray.get(i);
+                                        author.replaceAll(",", " ");
+                                        authors += author;
+                                        if (k != authorsArray.length() - 1)
+                                            authors += ',';
+                                    }
+                                    changedAuthors = authors.replace("'", "''");
+
+                                }
+                                Log.e("fillBooksFromAPI", "fillBooksFromAPI: insert "+changedTitle );
+                                db.execSQL("insert into Book values (null,\'" + changedTitle + "\',\'" + changedAuthors + "\'," + catId + ");");
+                            }
+
                         }
-                        String changedAuthors = authors.replace("'","''");
-                        String changedTitle = title.replace("'","''");
-
-                        db.execSQL( "insert into Book values (null,\'"+changedTitle+"\',\'" +changedAuthors+ "\',"+catId+");");
-
                     }
 
                 }
@@ -131,23 +163,28 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<BookModel> getBooks(int categoryID , String categoryName){
         SQLiteDatabase db = this.getReadableDatabase();
         List<BookModel>books = new ArrayList<BookModel>();
-
         Cursor resultSet = db.rawQuery("Select * from Book where category_id="+categoryID,null);
-
         if (resultSet != null) {
             if (resultSet.moveToFirst()) {
                 do {
 
                     int bookId = resultSet.getInt(resultSet.getColumnIndex("id"));
+                    //Log.e("books", "getBooks: id "+bookId);
                     String bookTitle = resultSet.getString(resultSet.getColumnIndex("title"));
                     String authorsString = resultSet.getString(resultSet.getColumnIndex("authors"));
-                    String []authors = authorsString.split(",");
+                  //  Log.e("books", "getBooks: author "+authorsString);
+                    String []authors = new String[10];
+                    if (authorsString!=null)
+                         authors = authorsString.split(",");
                     BookModel book = new BookModel(bookId,bookTitle,authors,categoryName);
                     Log.e("books", "getBooks: "+bookTitle);
                     books.add(book);
                 } while (resultSet.moveToNext());
             }
         }
+        else
+            Log.e("books", "getBooks: no books");
+
 
         return books;
     }
