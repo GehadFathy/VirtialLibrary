@@ -2,6 +2,7 @@ package com.example.library.sw_library.Views;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -9,16 +10,34 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.library.sw_library.Database.DBHelper;
+import com.example.library.sw_library.Models.BookModel;
 import com.example.library.sw_library.R;
 
-public class CategoryViewActivity extends AppCompatActivity {
+import java.util.List;
+
+public class ShelvesViewActivity extends AppCompatActivity {
+
+    private int categoryID ;
+    private String categoryName;
+    private int no_of_books_in_shelf=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelf);
-        int numRow = 4;
-        int numCol = 8;
+
+        categoryID = getIntent().getExtras().getInt("id");
+        categoryName = getIntent().getExtras().getString("name");
+        Log.e("Gehad", "Extras: "+categoryID+ " "+categoryName);
+
+
+        DBHelper dbHelper=new DBHelper(this);
+        List<BookModel> books = dbHelper.getBooks(categoryID,categoryName);
+        int numCol = no_of_books_in_shelf;
+        int numRow = books.size()/numCol;
+
+        Log.e("Gehad", "num: "+books.size()+" "+numCol+ " "+numRow);
 
         TableLayout tblLayout = findViewById(R.id.tblLayout);
 

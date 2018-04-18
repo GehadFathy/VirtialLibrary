@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.library.sw_library.Models.BookModel;
 import com.example.library.sw_library.Network.GoogleApiRequest;
 
 import org.json.JSONArray;
@@ -55,9 +55,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Category (name) values ('fiction'),('Math'),('Drama'),('Romance')," +
+        db.execSQL("insert into Category (name) values('Math')");/*,('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
-                "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
+                "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");*/
 
     }
     public Map<Integer,String> getCategories(){
@@ -76,9 +76,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while (resultSet.moveToNext());
             }
         }
+        else
+            Log.e("Category:::::: ","No category");
 
 
-    return categories ;
+
+        return categories ;
     }
 
 
@@ -105,12 +108,16 @@ public class DBHelper extends SQLiteOpenHelper {
                         Log.e("aaa", "processFinish: "+title );
                         String authors = "" ;
                         for (int k=0 ; k<authorsArray.length();k++){
-                            authors+=authorsArray.get(i);
+                            String author = (String) authorsArray.get(i);
+                            author.replaceAll(","," ");
+                            authors+= author;
+                            if (k!= authorsArray.length()-1)
+                                authors += ',';
                         }
                         String changedAuthors = authors.replace("'","''");
                         String changedTitle = title.replace("'","''");
 
-                        db.execSQL( "insert into Book values (null,\'"+title+"\',\'" +changedAuthors+ "\',"+catId+");");
+                        db.execSQL( "insert into Book values (null,\'"+changedTitle+"\',\'" +changedAuthors+ "\',"+catId+");");
 
                     }
 
@@ -121,21 +128,27 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    //todo
-    public void getBooks(int categoryID){
+    public List<BookModel> getBooks(int categoryID , String categoryName){
         SQLiteDatabase db = this.getReadableDatabase();
+        List<BookModel>books = new ArrayList<BookModel>();
 
         Cursor resultSet = db.rawQuery("Select * from Book where category_id="+categoryID,null);
 
         if (resultSet != null) {
             if (resultSet.moveToFirst()) {
                 do {
-                    String book1 = resultSet.getString(resultSet.getColumnIndex("name"));
-                    Log.e("books", "getBooks: "+book1 );
+
+                    int bookId = resultSet.getInt(resultSet.getColumnIndex("id"));
+                    String bookTitle = resultSet.getString(resultSet.getColumnIndex("title"));
+                    String authorsString = resultSet.getString(resultSet.getColumnIndex("authors"));
+                    String []authors = authorsString.split(",");
+                    BookModel book = new BookModel(bookId,bookTitle,authors,categoryName);
+                    Log.e("books", "getBooks: "+bookTitle);
+                    books.add(book);
                 } while (resultSet.moveToNext());
             }
         }
 
-
+        return books;
     }
 }
