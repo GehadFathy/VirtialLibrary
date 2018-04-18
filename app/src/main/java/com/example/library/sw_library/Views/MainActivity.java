@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.deleteDatabase("Library");
 
-       DBHelper mydb = new DBHelper(this);
+        DBHelper mydb = new DBHelper(this);
         mydb.fillCategory();
         mydb.getCategories();
         try {

@@ -30,9 +30,10 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
     }
     @Override
     protected JSONObject doInBackground(String... strings) {
-        Log.e("Network", "Network:: in start: ");
 
         String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=subject:"+category;
+        Log.e("Network", "Network:: in start: "+apiUrlString);
+
         JSONObject responseJson = new JSONObject();
 
         try{
