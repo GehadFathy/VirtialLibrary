@@ -87,7 +87,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void fillBooksFromAPI() throws JSONException {
 
+        //get all categories
         Map <Integer,String> categories =getCategories();
+        /*for each category : access google API to get books for it*/
         Iterator<Integer> itr = categories.keySet().iterator();
         while(itr.hasNext()){
             final int catId = itr.next();
@@ -98,27 +100,37 @@ public class DBHelper extends SQLiteOpenHelper {
                     JSONObject responseJson=output ;
 
                     Log.e("Network", "Network:: fillBooksFromAPI: "+responseJson );
-                    JSONArray booksArray = responseJson.getJSONArray("items");
-                    SQLiteDatabase db =DBHelper.super.getWritableDatabase();
-                    for (int i=0 ; i<booksArray.length();i++){
-                        JSONObject book =(JSONObject) booksArray.get(i);
-                        JSONObject volumeInfo=book.getJSONObject("volumeInfo");
-                        String title = volumeInfo.getString("title");
-                        JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                        Log.e("aaa", "processFinish: "+title );
-                        String authors = "" ;
-                        for (int k=0 ; k<authorsArray.length();k++){
-                            String author = (String) authorsArray.get(i);
-                            author.replaceAll(","," ");
-                            authors+= author;
-                            if (k!= authorsArray.length()-1)
-                                authors += ',';
+                    if (responseJson.has("item")) {
+                        JSONArray booksArray = responseJson.getJSONArray("items");
+                        SQLiteDatabase db = DBHelper.super.getWritableDatabase();
+                        for (int i = 0; i < booksArray.length(); i++) {
+                            JSONObject book = (JSONObject) booksArray.get(i);
+                            if (book.has("volumeInfo")) {
+                                String title ="",author="",changedAuthors="",changedTitle="";
+                                JSONObject volumeInfo = book.getJSONObject("volumeInfo");
+                                if (volumeInfo.has("title")) {
+                                    title = volumeInfo.getString("title");
+                                    changedTitle = title.replace("'", "''");
+                                }
+                                if (volumeInfo.has("authors")) {
+                                    JSONArray authorsArray = volumeInfo.getJSONArray("authors");
+                                    Log.e("aaa", "processFinish: " + title);
+                                    String authors = "";
+                                    for (int k = 0; k < authorsArray.length(); k++) {
+                                        author = (String) authorsArray.get(i);
+                                        author.replaceAll(",", " ");
+                                        authors += author;
+                                        if (k != authorsArray.length() - 1)
+                                            authors += ',';
+                                    }
+                                    changedAuthors = authors.replace("'", "''");
+
+                                }
+
+                                db.execSQL("insert into Book values (null,\'" + changedTitle + "\',\'" + changedAuthors + "\'," + catId + ");");
+                            }
+
                         }
-                        String changedAuthors = authors.replace("'","''");
-                        String changedTitle = title.replace("'","''");
-
-                        db.execSQL( "insert into Book values (null,\'"+changedTitle+"\',\'" +changedAuthors+ "\',"+catId+");");
-
                     }
 
                 }

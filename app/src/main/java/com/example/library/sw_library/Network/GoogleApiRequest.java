@@ -30,9 +30,10 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
     }
     @Override
     protected JSONObject doInBackground(String... strings) {
-        Log.e("Network", "Network:: in start: ");
 
         String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=subject:"+category;
+        Log.e("Network", "Network:: in start: "+apiUrlString);
+
         JSONObject responseJson = new JSONObject();
 
         try{
@@ -41,9 +42,11 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
             try{
                 URL url = new URL(apiUrlString);
                 connection = (HttpURLConnection) url.openConnection();
+                Log.e("Network", "Network:: after open connection: ");
                 connection.setRequestMethod("GET");
-                connection.setReadTimeout(5000); // 5 seconds
-                connection.setConnectTimeout(5000); // 5 seconds
+                connection.setReadTimeout(10000);
+                // Timeout for connection.connect() arbitrarily set to 3000ms.
+                connection.setConnectTimeout(10000);
                 connection.connect();
                 Log.e("Network", "Network:: after connection: ");
 
