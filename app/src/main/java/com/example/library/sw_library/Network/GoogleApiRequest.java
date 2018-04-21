@@ -14,6 +14,9 @@ import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
+/*
+class to integrate with google book API
+*/
 public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
 
     public interface AsyncResponse {
@@ -56,13 +59,6 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
             }
             int responseCode = connection.getResponseCode();
             Log.e("Network", "Network:: code "+responseCode);
-            Log.e("Network", "Network:: code "+responseCode);
-/*
-            if(responseCode != 200){
-                Log.w(getClass().getName(), "GoogleBooksAPI request failed. Response Code: " + responseCode);
-                connection.disconnect();
-                return null;
-            }*/
 
             // Read data from response.
             StringBuilder builder = new StringBuilder();
@@ -96,17 +92,14 @@ public class GoogleApiRequest extends AsyncTask<String, Object, JSONObject> {
             e.printStackTrace();
             return null;
         }
-
     }
-        @Override
+    @Override
     protected void onPostExecute(JSONObject jsonObject) {
-            Log.d("bbb", "***************");
-            try {
-                delegate.processFinish(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        try {
+            delegate.processFinish(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+    }
 }

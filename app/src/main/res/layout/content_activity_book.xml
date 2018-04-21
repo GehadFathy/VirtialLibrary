@@ -10,17 +10,19 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="176dp"
-        android:layout_height="259dp"
+        android:layout_width="327dp"
+        android:layout_height="216dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:src="@android:color/background_light"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="331dp"
-        android:layout_height="140dp"
-        android:text="TextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="295dp" />
 
@@ -28,7 +30,8 @@
         android:id="@+id/authorTextView"
         android:layout_width="155dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:layout_above="@+id/ISBNTextView"
+        android:layout_centerHorizontal="true"
         tools:layout_editor_absoluteX="213dp"
         tools:layout_editor_absoluteY="86dp" />
 
@@ -36,7 +39,8 @@
         android:id="@+id/categoryTextView"
         android:layout_width="155dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:layout_above="@+id/authorTextView"
+        android:layout_centerHorizontal="true"
         tools:layout_editor_absoluteX="213dp"
         tools:layout_editor_absoluteY="186dp" />
 
@@ -44,7 +48,8 @@
         android:id="@+id/ISBNTextView"
         android:layout_width="155dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:layout_above="@+id/linkTextView"
+        android:layout_centerHorizontal="true"
         tools:layout_editor_absoluteX="213dp"
         tools:layout_editor_absoluteY="136dp" />
 
@@ -52,7 +57,9 @@
         android:id="@+id/linkTextView"
         android:layout_width="155dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
         tools:layout_editor_absoluteX="213dp"
         tools:layout_editor_absoluteY="36dp" />
 
