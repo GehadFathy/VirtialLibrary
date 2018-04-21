@@ -18,12 +18,13 @@ import java.net.URL;
 
 public class BookModel {
 
+    /*book attributes in the DB*/
     private int bookID ;
     private String name;
     private String []authors;
     private String category;
 
-
+    /*constructor*/
     public BookModel(int bookID, String name, String []authors, String category) {
         this.bookID = bookID;
         this.name = name;
@@ -32,38 +33,47 @@ public class BookModel {
     }
     public BookModel(){}
 
+    /*get the book ID*/
     public int getBookID() {
         return bookID;
     }
 
+    /*set the book ID*/
     public void setBookID(int bookID) {
         this.bookID = bookID;
     }
 
+    /*get the book name*/
     public String getName() {
         return name;
     }
 
+    /*set the book name*/
     public void setName(String name) {
         this.name = name;
     }
 
+    /*get the book authors*/
     public String[] getAuthors() {
         return authors;
     }
 
+    /*set the book authors*/
     public void setAuthors(String[] authors) {
         this.authors = authors;
     }
 
+    /*get the book category*/
     public String getCategory() {
         return category;
     }
 
+    /*set the book category*/
     public void setCategory(String category) {
         this.category = category;
     }
 
+    /*get the book info. from the API*/
     public JSONObject getBookJSONObject(String bookTitle) throws BadRequestException {
 
         String apiUrlString = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + bookTitle + "&filter:free-ebooks&printType:books";
@@ -85,12 +95,9 @@ public class BookModel {
             }
             int responseCode = connection.getResponseCode();
             if(responseCode != 200){
-                //System.out.println("GoogleBooksAPI request failed. Response Code: " + responseCode);
-                //Log.w(getClass().getName(), "GoogleBooksAPI request failed. Response Code: " + responseCode);
                 connection.disconnect();
                 throw new BadRequestException("GoogleBooksAPI request failed. Response Code: " + responseCode);
 
-//                return null;
             }
 
             // Read data from response.
@@ -103,20 +110,16 @@ public class BookModel {
                 System.out.println(line);
             }
             String responseString = builder.toString();
-            //Log.d(getClass().getName(), "Response String: " + responseString);
             JSONObject responseJson = new JSONObject(responseString);
             // Close connection and return response code.
             connection.disconnect();
             return responseJson;
         } catch (SocketTimeoutException e) {
-            //Log.w(getClass().getName(), "Connection timed out. Returning null");
             return null;
         } catch(IOException e){
-            //Log.d(getClass().getName(), "IOException when connecting to Google Books API.");
             e.printStackTrace();
             return null;
         } catch (JSONException e) {
-            //Log.d(getClass().getName(), "JSONException when connecting to Google Books API.");
             e.printStackTrace();
             return null;
         }
@@ -127,6 +130,4 @@ public class BookModel {
             super(msg);
         }
     }
-
-
 }
