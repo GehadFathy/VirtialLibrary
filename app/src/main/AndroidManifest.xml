@@ -38,6 +38,9 @@
             android:name=".Views.BookViewActivity"
             android:label="@string/title_activity_book"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Views.LoginActivity"
+            android:label="activity_login"></activity>
 
     </application>
 

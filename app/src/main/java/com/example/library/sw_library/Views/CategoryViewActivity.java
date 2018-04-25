@@ -4,6 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
 import java.util.ArrayList;
@@ -46,4 +50,28 @@ public class CategoryViewActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {}
+    /*
+    for login menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.library, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.menu_login) {
+            Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show();
+            Intent loginIntent = new Intent(
+                    CategoryViewActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+
+        }
+
+        return true;
+    }
 }
