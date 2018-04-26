@@ -7,8 +7,46 @@
 
     tools:context="com.example.library.sw_library.Views.LoginActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login in"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/email"
+                    android:layout_width="358dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Enter Email" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/password"
+                    android:layout_width="358dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Enter Password" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/email_signin_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SIGN IN" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

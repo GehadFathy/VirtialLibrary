@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
             this.deleteDatabase("Library");
             DBHelper mydb = DBHelper.getInstance(this);
             mydb.fillCategory();
+            mydb.fillAdmin();
             try {
                 mydb.fillBooksFromAPI();
             } catch (JSONException e) {

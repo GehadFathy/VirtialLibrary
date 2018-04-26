@@ -41,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
         db.execSQL("create table Book (id integer primary key, title text, authors text, category_id integer," +
                 " foreign key (category_id) references Category(id)); ");
-        db.execSQL("create table Admin (id integer primary key, name text,email text,pwd text);" );
+        db.execSQL("create table Admin (id integer primary key AUTOINCREMENT, name text,email text,pwd text);" );
 
     }
 
@@ -62,11 +62,22 @@ public class DBHelper extends SQLiteOpenHelper {
         return  0;
     }
 
+    /*fill the DB admins*/
+    public void fillAdmin(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("insert into Admin (name) values(null, 'Asmaa', 'sh.asmosama@hotmail.com', 'DontEnter'),"+
+                "(null, 'Amira', 'amira@hotmail.com', 'DontEnter')," +
+                "(null, 'Gehad', 'gehad@hotmail.com', 'DontEnter')," +
+                "(null, 'Menna', 'menna@hotmail.com', 'DontEnter')");
+
+    }
+
     /*fill the DB categories*/
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Category (name) values('Math'),('Drama'),('Romance')," +
+        db.execSQL("insert into Category values('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
                 "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
 
@@ -252,5 +263,18 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             Log.e("books", "getBooks: no books");
         return books;
+    }
+
+    public boolean validMail(String mail) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor resultSet = db.rawQuery("Select * from Admin where email="+mail,null);
+        return resultSet != null;
+    }
+
+    public boolean validPW(String mail, String pw) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor resultSet = db.rawQuery("Select pwd from Admin where email="+mail,null);
+        if (resultSet == null) return false;
+        return resultSet.getString(resultSet.getColumnIndex("pwd")) == pw;
     }
 }
