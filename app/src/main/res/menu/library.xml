@@ -8,4 +8,15 @@
         android:title="Login"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_add"
+        android:orderInCategory="100"
+        android:title="Add Book"
+        app:showAsAction="never" />
+ <item
+        android:id="@+id/menu_remove"
+        android:orderInCategory="100"
+        android:title="Remove Book"
+        app:showAsAction="never" />
+
 </menu>

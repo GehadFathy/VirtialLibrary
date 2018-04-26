@@ -70,6 +70,11 @@ public class CategoryViewActivity extends AppCompatActivity {
                     CategoryViewActivity.this, LoginActivity.class);
             startActivity(loginIntent);
 
+        }if (item.getItemId() == R.id.menu_add) {
+            Intent loginIntent = new Intent(
+                    CategoryViewActivity.this, AddBookActivity.class);
+            startActivity(loginIntent);
+
         }
 
         return true;

@@ -4,10 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.example.library.sw_library.Models.BookModel;
 import com.example.library.sw_library.Network.GoogleApiRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +53,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Book " );
         onCreate(db);
 
+    }
+    public int addOneBook(String bookName, String authorName, int categoryId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query ="insert into Book values (null,\'"+bookName+"\',\'"+authorName +"\',"+categoryId+");";
+        Log.e("Query", "addOneBook: "+query );
+        db.execSQL(query);
+        return  0;
     }
 
     /*fill the DB categories*/
@@ -119,7 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     String category = resultSet.getString(resultSet.getColumnIndex("name"));
                     int id = resultSet.getInt(resultSet.getColumnIndex("id"));
                     categories.put(id,category);
-                    Log.e("Category:::::: ",category);
+                    Log.e("Category:::::: ",id+" "+category);
                 } while (resultSet.moveToNext());
             }
         }
