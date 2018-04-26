@@ -68,7 +68,7 @@ public class AddBookActivity extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 bookName=bookNameText.getText().toString();
                 authorName=authorNameText.getText().toString();
-                Toast.makeText(getApplicationContext(),categoryName+" "+getCategoryId(categoryName),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),categoryName+" "+getCategoryId(categoryName),Toast.LENGTH_SHORT).show();
                 if (bookName.length()==0 ||authorName .length()==0 ){
                     new AlertDialog.Builder(AddBookActivity.this)
                             .setTitle("Warning")

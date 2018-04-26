@@ -82,8 +82,9 @@ public class ShelvesViewActivity extends AppCompatActivity {
                     }
                 }
                 textView.setText(s);
+
                 textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                textView.setBackgroundResource(R.drawable.new_book);
+                textView.setBackgroundResource(R.drawable.book2);
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
