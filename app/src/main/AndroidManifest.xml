@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- android:name=".Views.Start" -->
-
-
         <!-- splash -->
         <activity android:name=".Views.MainActivity">
             <intent-filter>
