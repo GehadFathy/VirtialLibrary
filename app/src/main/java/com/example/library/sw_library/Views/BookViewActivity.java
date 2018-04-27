@@ -2,30 +2,23 @@ package com.example.library.sw_library.Views;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.library.sw_library.Network.GoogleApiRequest;
 import com.example.library.sw_library.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /*
 Book View
 */
+
 public class BookViewActivity extends AppCompatActivity implements GoogleApiRequest.AsyncResponse {
 
     @Override
@@ -36,7 +29,6 @@ public class BookViewActivity extends AppCompatActivity implements GoogleApiRequ
         /*get the book title from the previous activity*/
         String bookTitle = getIntent().getExtras().getString("title");
 
-        Log.d("BookView", "onCreateBook: "+bookTitle );
         String apiUrlString="https://www.googleapis.com/books/v1/volumes?q=intitle:" + bookTitle.replace(" ", "+") + "&filter:free-ebooks&printType:books";
         new GoogleApiRequest(apiUrlString,this).execute(bookTitle);
 
@@ -60,7 +52,6 @@ public class BookViewActivity extends AppCompatActivity implements GoogleApiRequ
                 bimage = BitmapFactory.decodeStream(in);
 
             } catch (Exception e) {
-                Log.e("Error Message", e.getMessage());
                 e.printStackTrace();
             }
             return bimage;
@@ -126,7 +117,6 @@ public class BookViewActivity extends AppCompatActivity implements GoogleApiRequ
     public void processFinish(JSONObject output) throws JSONException {
         if(output.getInt("totalItems") != 0) {
             JSONObject book = (JSONObject) output.getJSONArray("items").get(0);
-            Log.d(this.toString(), "BookResponse: " + book);
             displayBook(book);
         }
     }

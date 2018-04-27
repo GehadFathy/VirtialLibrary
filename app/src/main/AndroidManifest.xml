@@ -12,33 +12,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--  android:name=".Views.Start"-->
+
+        <!-- android:name=".Views.Start" -->
+
 
         <!-- splash -->
         <activity android:name=".Views.MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <!-- categories -->
-        <activity android:name=".Views.CategoryViewActivity"/>
+        <activity android:name=".Views.CategoryViewActivity" />
 
         <!-- shelves -->
         <activity
             android:name=".Views.ShelvesViewActivity"
             android:label="@string/title_activity_shelf"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- book viewer -->
         <activity
             android:name=".Views.BookViewActivity"
             android:label="@string/title_activity_book"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".Views.SearchBookActivity"></activity>
     </application>
 
 </manifest>

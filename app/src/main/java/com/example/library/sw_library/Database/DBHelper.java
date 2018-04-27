@@ -4,18 +4,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.example.library.sw_library.Models.BookModel;
 import com.example.library.sw_library.Network.GoogleApiRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /*
@@ -28,8 +23,6 @@ public class DBHelper extends SQLiteOpenHelper {
     /*constructor*/
     private DBHelper(Context context){
         super(context,"Library",null,1);
-        Log.e("DBhelper", "created!!: " );
-
     }
 
     public static DBHelper getInstance(Context context){
@@ -39,107 +32,57 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        /*construct the DB tables*/
-        db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
-        db.execSQL("create table Book (id integer primary key, title text, authors text, category_id integer," +
-                " foreign key (category_id) references Category(id)); ");
-        db.execSQL("create table Admin (id integer primary key, name text,email text,pwd text);" );
 
+        /*construct the DB tables*/
+
+        db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
+        db.execSQL("create table Admin (id integer primary key, name text,email text,pwd text);" );
+        db.execSQL("create table Book (id integer primary key, title text, category_id integer," +
+                " foreign key (category_id) references Category(id)); ");
+        db.execSQL("create table Author (id integer primary key, name text);" );
+        db.execSQL("create table BookAuthors (book_id integer, author_id integer," +
+                " foreign key (book_id) references Book(id), foreign key (author_id) references Author(id));");
     }
 
     /*drop the DB tables if exist*/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         db.execSQL("DROP TABLE IF EXISTS Category " );
         db.execSQL("DROP TABLE IF EXISTS Book " );
+        db.execSQL("DROP TABLE IF EXISTS Author " );
+        db.execSQL("DROP TABLE IF EXISTS BookAuthors " );
         onCreate(db);
-
     }
-
     /*fill the DB categories*/
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
-
         db.execSQL("insert into Category (name) values('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
                 "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
-
-    }
-
-    /*initial fill for the Book tables for test*/
-    public void initialFillBooks()  {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("insert into Book values (null,'Childcraft','null',15);");
-        db.execSQL("insert into Book values (null,'Christmast','Holly Berry-Byrd',15);");
-        db.execSQL("insert into Book values (null,'A Common Stage','Carol Symes',15);");
-        db.execSQL("insert into Book values (null,'Macbeth','William Shakespeare',15);");
-        db.execSQL("insert into Book values (null,'Man and Superman','George Bernard Shaw',15);");
-        db.execSQL("insert into Book values (null,'Fawcetta','Dalian Artanian',15);");
-        db.execSQL("insert into Book values (null,'Dare to Love','Carly Phillips',15);");
-
-
-        db.execSQL("insert into Book values (null,'Childcraft','null',13);");
-        db.execSQL("insert into Book values (null,'Christmast','Holly Berry-Byrd',13);");
-        db.execSQL("insert into Book values (null,'A Common Stage','Carol Symes',5);");
-        db.execSQL("insert into Book values (null,'Macbeth','William Shakespeare',4);");
-        db.execSQL("insert into Book values (null,'Man and Superman','George Bernard Shaw',1);");
-        db.execSQL("insert into Book values (null,'Fawcetta','Dalian Artanian',1);");
-        db.execSQL("insert into Book values (null,'Dare to Love','Carly Phillips',8);");
-
-        db.execSQL("insert into Book values (null,'Childcraft','null',8);");
-        db.execSQL("insert into Book values (null,'Christmast','Holly Berry-Byrd',8);");
-        db.execSQL("insert into Book values (null,'A Common Stage','Carol Symes',6);");
-        db.execSQL("insert into Book values (null,'Macbeth','William Shakespeare',7);");
-        db.execSQL("insert into Book values (null,'Man and Superman','George Bernard Shaw',5);");
-        db.execSQL("insert into Book values (null,'Fawcetta','Dalian Artanian',6);");
-        db.execSQL("insert into Book values (null,'Dare to Love','Carly Phillips',8);");
-
-        db.execSQL("insert into Book values (null,'Childcraft','null',10);");
-        db.execSQL("insert into Book values (null,'Christmast','Holly Berry-Byrd',10);");
-        db.execSQL("insert into Book values (null,'A Common Stage','Carol Symes',11);");
-        db.execSQL("insert into Book values (null,'Macbeth','William Shakespeare',11);");
-        db.execSQL("insert into Book values (null,'Man and Superman','George Bernard Shaw',12);");
-        db.execSQL("insert into Book values (null,'Fawcetta','Dalian Artanian',12);");
-        db.execSQL("insert into Book values (null,'Dare to Love','Carly Phillips',12);");
-
-
     }
 
     /*get the categories name and id from thr DB*/
     public Map<Integer,String> getCategories(){
-
         SQLiteDatabase db = this.getReadableDatabase();
         Map<Integer,String> categories = new HashMap<Integer,String>();
         Cursor resultSet = db.rawQuery("Select * from Category",null);
-
         if (resultSet != null) {
             if (resultSet.moveToFirst()) {
                 do {
                     String category = resultSet.getString(resultSet.getColumnIndex("name"));
                     int id = resultSet.getInt(resultSet.getColumnIndex("id"));
                     categories.put(id,category);
-                    Log.e("Category:::::: ",category);
                 } while (resultSet.moveToNext());
             }
         }
-        else
-            Log.e("Category:::::: ","No category");
-
         return categories ;
     }
+
 
     /*fill the book table in DB from the API*/
     public void fillBooksFromAPI() throws JSONException {
         Map <Integer,String> categories = getCategories();
-
-
         // print all categories
-
-        ArrayList<String> cats = new ArrayList<>(categories.values());
-        for (String s:cats) {
-            Log.d("cat-i", s);
-        }
         Iterator<Integer> itr = categories.keySet().iterator();
         while(itr.hasNext()){
             final int catId = itr.next();
@@ -150,102 +93,124 @@ public class DBHelper extends SQLiteOpenHelper {
                 public void processFinish(JSONObject output) throws JSONException {
                     /*parse the JSON file*/
                     JSONObject responseJson = output;
-
                     if (responseJson.has("items")) {
-                        Log.d("has-books", catName);
-
                         JSONArray booksArray = responseJson.getJSONArray("items");
                         SQLiteDatabase db = DBHelper.super.getWritableDatabase();
-                        Log.d("books-array", catName + " " + booksArray.length());
                         for (int i = 0; i < booksArray.length(); i++) {
-
                             JSONObject book = (JSONObject) booksArray.get(i);
-
                             if (book.has("volumeInfo")) {
-
-                                String title ="",author="",changedAuthors="",changedTitle="";
-
+                                String title ="",author="",changedTitle="";
                                 JSONObject volumeInfo = book.getJSONObject("volumeInfo");
-
                                 if (volumeInfo.has("title")) {
                                     title = volumeInfo.getString("title");
                                     changedTitle = title.replace("'", "''");
+                                    changedTitle = changedTitle.replace(' ', '$').toLowerCase().trim();
+                                }
+                                int bookId = 0;
+                                try {
+                                    Log.d("inserted-book", changedTitle);
+                                    db.execSQL("insert into Book values (null,\'" + changedTitle + "\'," + catId + ");");
+
+                                    Cursor resultSet =  db.rawQuery("SELECT MAX(id) AS LastID FROM Book;", null);
+                                    if (resultSet != null) {
+                                        if (resultSet.moveToFirst()) {
+                                            do {
+                                                bookId = resultSet.getInt(resultSet.getColumnIndex("LastID"));
+                                            } while (resultSet.moveToNext());
+                                        }
+                                    }
+                                }catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                                 if (volumeInfo.has("authors")) {
                                     JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                                    String authors = "";
-
-
+                                    ArrayList<String> authors = new ArrayList<>();
                                     try {
                                         for (int k = 0; k < authorsArray.length(); k++) {
                                             author = (String) authorsArray.get(i);
                                             author.replaceAll(",", " ");
-                                            authors += author;
-                                            if (k != authorsArray.length() - 1)
-                                                authors += ',';
+                                            authors.add(author);
                                         }
                                     }catch (Exception e) {}
-
-                                    changedAuthors = authors.replace("'", "''");
-
+                                    for (String auth: authors) {
+                                        Log.d("Author", auth);
+                                        db.execSQL("insert into Author values (null,\'" + auth.trim().toLowerCase() + "\');");
+                                        Cursor resultSet = db.rawQuery("SELECT MAX(id) AS LastID FROM Author;", null);
+                                        int authorId = 0;
+                                        if (resultSet != null) {
+                                            if (resultSet.moveToFirst()) {
+                                                do {
+                                                    authorId = resultSet.getInt(resultSet.getColumnIndex("LastID"));
+                                                } while (resultSet.moveToNext());
+                                            }
+                                        }
+                                        db.execSQL("insert into BookAuthors values (" + bookId + "," + authorId + ");");
+                                    }
                                 }
-                                Log.d("book-i",   catName+ changedTitle +" " + changedAuthors );
-                                try {
-                                    db.execSQL("insert into Book values (null,\'" + changedTitle + "\',\'" + changedAuthors + "\'," + catId + ");");
-                                }catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }else {
-                                Log.d("book-i", catName +" "+"hasn't volume info ");
                             }
-
                         }
-                    }else {
-                        Log.d("No-books", catName);
                     }
-
                 }
-
             }).execute();
         }
     }
-
-    /*get book*/
-    public void getBook() {
-        Log.d("BookView", "onCreateBook: christmast" );
-        String apiUrlString="https://www.googleapis.com/books/v1/volumes?q=intitle:Childcraft&filter:free-ebooks&printType:books";
-        new GoogleApiRequest(apiUrlString ,new GoogleApiRequest.AsyncResponse(){
-            @Override
-            public void processFinish(JSONObject output) throws JSONException {
-                Log.d(this.toString(), "BookResponse: "+output);
-            }}).execute();
-
-    }
-
     /*get book from the DB by category name and ID*/
-    public List<BookModel> getBooks(int categoryID , String categoryName){
+    public ArrayList<String> getBooks(int categoryID , String categoryName){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<BookModel>books = new ArrayList<BookModel>();
+        ArrayList<String>books = new ArrayList<String>();
         /*result set from the DB*/
         Cursor resultSet = db.rawQuery("Select * from Book where category_id="+categoryID,null);
+
         if (resultSet != null) {
             if (resultSet.moveToFirst()) {
                 do {
-
-                    int bookId = resultSet.getInt(resultSet.getColumnIndex("id"));
                     String bookTitle = resultSet.getString(resultSet.getColumnIndex("title"));
-                    String authorsString = resultSet.getString(resultSet.getColumnIndex("authors"));
-                    String []authors = new String[10];
-                    if (authorsString!=null)
-                        authors = authorsString.split(",");
-                    BookModel book = new BookModel(bookId,bookTitle,authors,categoryName);
-                    Log.e("books", "getBooks: "+bookTitle);
-                    books.add(book);
+                    books.add(bookTitle.replace('$', ' '));
                 } while (resultSet.moveToNext());
             }
         }
-        else
-            Log.e("books", "getBooks: no books");
         return books;
+    }
+    public ArrayList<String> findBook(String title, String authors){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] authorsList = authors.split("\\s*,\\s*");
+        String values = "";
+
+        for (int i=0;i<authorsList.length;i++){
+            values += "'" + authorsList[i].trim().toLowerCase() + "'";
+               if (i < authorsList.length-1){
+                   values +=",";
+               }
+        }
+        title = title.replace(' ', '$').toLowerCase().trim();
+        Cursor resultSet = null;
+        ArrayList<String> booksTitles = new ArrayList<String>();
+        if (title.length() >0 && authors.length() > 0) {
+
+            resultSet =
+                    db.rawQuery("Select * FROM (Select title from Book where id IN " +
+                            "(Select book_id from BookAuthors where author_id IN (Select id from Author where name IN (" + values + ")))) t1" +
+                            " INNER JOIN (SELECT title from Book where title="+"\'"+title+"\'" + ") t2 on t1.title = t2.title", null);
+
+
+        }else if (title.length() == 0 && authors.length() > 0){
+            resultSet =
+                    db.rawQuery("Select title from Book where id IN " +
+                            "( Select book_id from BookAuthors where author_id IN (Select id from Author where name IN (" + values + ")))", null);
+
+        }else if (title.length() > 0  && authors.length() ==0) {
+            resultSet = db.rawQuery("SELECT title FROM Book WHERE title="+"\'"+title+"\'",null);
+        }
+
+        if (resultSet != null) {
+            if (resultSet.moveToFirst()){
+                do {
+                    String bookTitle = resultSet.getString(resultSet.getColumnIndex("title"));
+                    booksTitles.add(bookTitle.replace('$', ' '));
+                } while (resultSet.moveToNext());
+            }
+        }
+        return booksTitles;
     }
 }

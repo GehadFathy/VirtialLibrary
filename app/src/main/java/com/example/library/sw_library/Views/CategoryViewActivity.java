@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
 import java.util.ArrayList;
@@ -38,12 +40,15 @@ public class CategoryViewActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                intent.putExtra("id",id);
-                intent.putExtra("name",category);
+                Log.d("category ", category);
+                ArrayList<String> books = dbhelber.getBooks(id,category);
+                Log.d("book-size", String.valueOf(books.size()));
+                for (int i=0;i<books.size();i++){
+                    Log.d("book-i", books.get(i));
+                }
+                intent.putExtra("books",books);
                 startActivity(intent);
             }
         });
     }
-    @Override
-    public void onBackPressed() {}
 }

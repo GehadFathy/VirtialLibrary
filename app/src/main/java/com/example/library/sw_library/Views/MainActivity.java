@@ -3,16 +3,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
-
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /*
 Splash screen
@@ -39,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent mainIntent = new Intent(MainActivity.this,CategoryViewActivity.class);
+                Intent mainIntent = new Intent(MainActivity.this,SearchBookActivity.class);
                 MainActivity.this.startActivity(mainIntent);
                 MainActivity.this.finish();
             }
