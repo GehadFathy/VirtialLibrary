@@ -66,7 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillAdmin(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Admin (name) values(null, 'Asmaa', 'sh.asmosama@hotmail.com', 'DontEnter'),"+
+        db.execSQL("insert into Admin values(null, 'Asmaa', 'sh.asmosama@hotmail.com', 'DontEnter'),"+
                 "(null, 'Amira', 'amira@hotmail.com', 'DontEnter')," +
                 "(null, 'Gehad', 'gehad@hotmail.com', 'DontEnter')," +
                 "(null, 'Menna', 'menna@hotmail.com', 'DontEnter')");
@@ -77,7 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Category values('Math'),('Drama'),('Romance')," +
+        db.execSQL("insert into Category (name) values('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
                 "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
 
