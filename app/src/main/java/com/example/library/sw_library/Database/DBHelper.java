@@ -267,14 +267,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean validMail(String mail) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor resultSet = db.rawQuery("Select * from Admin where email="+mail,null);
+        Cursor resultSet = db.rawQuery("Select * from Admin where email='"+mail+"'",null);
         return resultSet != null;
     }
 
     public boolean validPW(String mail, String pw) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor resultSet = db.rawQuery("Select pwd from Admin where email="+mail,null);
+        Cursor resultSet = db.rawQuery("Select pwd from Admin WHERE email=?",new String[]{mail});
         if (resultSet == null) return false;
-        return resultSet.getString(resultSet.getColumnIndex("pwd")) == pw;
+        return resultSet.getString(resultSet.getColumnIndex("pwd")).equals(pw);
     }
 }

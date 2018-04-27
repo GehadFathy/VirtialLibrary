@@ -67,7 +67,7 @@ public class CategoryViewActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_login) {
             Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show();
             Intent loginIntent = new Intent(
-                    CategoryViewActivity.this, LoginActivity2.class);
+                    CategoryViewActivity.this, LoginActivity.class);
             startActivity(loginIntent);
 
         }if (item.getItemId() == R.id.menu_add) {

@@ -49,9 +49,6 @@
             android:name=".Views.LoginActivity"
             android:label="activity_login" />
         <activity android:name=".Views.AddBookActivity" />
-        <activity
-            android:name=".LoginActivity2"
-            android:label="@string/title_activity_login2"></activity>
     </application>
 
 </manifest>
