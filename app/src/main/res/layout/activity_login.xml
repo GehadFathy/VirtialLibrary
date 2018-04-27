@@ -20,12 +20,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/email"
-                    android:layout_width="358dp"
+                    android:layout_width="357dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="Enter Email" />
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    tools:text="Enter E-Mail" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -33,16 +35,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/password"
-                    android:layout_width="358dp"
+                <EditText
+                    android:id="@+id/pwd"
+                    android:layout_width="356dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPassword"
                     tools:text="Enter Password" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_signin_button"
+                android:id="@+id/signin_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SIGN IN" />

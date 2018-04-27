@@ -66,7 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillAdmin(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Admin (name) values(null, 'Asmaa', 'sh.asmosama@hotmail.com', 'DontEnter'),"+
+        db.execSQL("insert into Admin values(null, 'Asmaa', 'sh.asmosama@hotmail.com', 'DontEnter'),"+
                 "(null, 'Amira', 'amira@hotmail.com', 'DontEnter')," +
                 "(null, 'Gehad', 'gehad@hotmail.com', 'DontEnter')," +
                 "(null, 'Menna', 'menna@hotmail.com', 'DontEnter')");
@@ -77,7 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void fillCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("insert into Category values('Math'),('Drama'),('Romance')," +
+        db.execSQL("insert into Category (name) values('Math'),('Drama'),('Romance')," +
                 "('Travel'),('Children'),('Religion'),('Science'),('History'),('Comedy')," +
                 "('Tragedy'),('Adventure'),('cook'),('Art'),('Poetry'),('Health')");
 
@@ -267,14 +267,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean validMail(String mail) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor resultSet = db.rawQuery("Select * from Admin where email="+mail,null);
+        Cursor resultSet = db.rawQuery("Select * from Admin where email='"+mail+"'",null);
         return resultSet != null;
     }
 
     public boolean validPW(String mail, String pw) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor resultSet = db.rawQuery("Select pwd from Admin where email="+mail,null);
+        Cursor resultSet = db.rawQuery("Select pwd from Admin WHERE email=?",new String[]{mail});
         if (resultSet == null) return false;
-        return resultSet.getString(resultSet.getColumnIndex("pwd")) == pw;
+        if(resultSet.moveToFirst()) {
+            Log.e("DBHELPER", "validPW: " + resultSet.getString(resultSet.getColumnIndex("pwd")));
+            return resultSet.getString(resultSet.getColumnIndex("pwd")).equals(pw);
+        }
+        else {
+            return false;
+        }
     }
 }
