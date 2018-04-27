@@ -275,6 +275,12 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor resultSet = db.rawQuery("Select pwd from Admin WHERE email=?",new String[]{mail});
         if (resultSet == null) return false;
-        return resultSet.getString(resultSet.getColumnIndex("pwd")).equals(pw);
+        if(resultSet.moveToFirst()) {
+            Log.e("DBHELPER", "validPW: " + resultSet.getString(resultSet.getColumnIndex("pwd")));
+            return resultSet.getString(resultSet.getColumnIndex("pwd")).equals(pw);
+        }
+        else {
+            return false;
+        }
     }
 }

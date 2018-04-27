@@ -1,5 +1,6 @@
 package com.example.library.sw_library.Views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
@@ -81,7 +83,7 @@ public class LoginActivity extends AppCompatActivity  {
                 } else {
                     // Show a progress spinner, and kick off a background task to
                     // perform the user login attempt.
-                    mAuthTask = new LoginActivity.UserLoginTask(mail, pwd);
+                    mAuthTask = new LoginActivity.UserLoginTask( mail, pwd);
                     mAuthTask.execute((Void) null);
                 }
 
@@ -98,7 +100,7 @@ public class LoginActivity extends AppCompatActivity  {
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask( String email, String password) {
             mEmail = email;
             mPassword = password;
         }
@@ -113,22 +115,14 @@ public class LoginActivity extends AppCompatActivity  {
             mAuthTask = null;
 //            showProgress(false);
 
+            if(!success) {
+                Toast.makeText(LoginActivity.this,"LOG IN FAILED",Toast.LENGTH_SHORT).show();
+            }
+
             Intent intent=new Intent(LoginActivity.this,CategoryViewActivity.class);
             intent.putExtra("admin",success);
             startActivity(intent);
             finish();
-//            if (success) {
-//                Intent intent=new Intent(LoginActivity.this,CategoryViewActivity.class);
-//                intent.putExtra("admin",success);
-//                startActivity(intent);
-//                finish();
-//            } else {
-//                pwdView.setError(getString(R.string.error_incorrect_password));
-////                pwdView.requestFocus();
-//                Intent intent=new Intent(LoginActivity.this,CategoryViewActivity.class);
-//                intent.putExtra("admin",success);
-//                startActivity(intent);
-//            }
         }
 
         @Override
