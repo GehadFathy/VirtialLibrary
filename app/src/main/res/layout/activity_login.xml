@@ -22,12 +22,13 @@
 
                 <EditText
                     android:id="@+id/email"
-                    android:layout_width="356dp"
+                    android:layout_width="357dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textEmailAddress"
-                    tools:text="Enter Email" />
+                    android:inputType="textPersonName"
+                    tools:text="Enter E-Mail" />
+
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
