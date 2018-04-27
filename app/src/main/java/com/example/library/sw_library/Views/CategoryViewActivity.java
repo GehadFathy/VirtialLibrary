@@ -20,10 +20,12 @@ public class CategoryViewActivity extends AppCompatActivity {
     private Map<Integer,String> categories; //map each categoryID to its name
     private CategoryAdapter categoryAdapter;
     private DBHelper dbhelber;
+    private boolean admin = false ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
+        admin =  getIntent().getExtras().getBoolean("admin");
         dbhelber = DBHelper.getInstance(this);
         categories = dbhelber.getCategories();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -56,6 +58,14 @@ public class CategoryViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.library, menu);
+
+        //if not admin -> don't show add and remove options
+        MenuItem item = menu.findItem(R.id.menu_add);
+        MenuItem item2 = menu.findItem(R.id.menu_remove);
+        if (!admin) {
+            item.setVisible(false);
+            item2.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
