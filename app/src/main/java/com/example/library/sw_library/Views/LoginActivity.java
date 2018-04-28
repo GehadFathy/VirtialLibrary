@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
+
+import java.util.List;
 
 /**
  * A login screen that offers login via email/password.
@@ -132,6 +135,14 @@ public class LoginActivity extends AppCompatActivity  {
         }
     }
 
+//    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+//        ArrayAdapter<String> adapter =
+//                new ArrayAdapter<>(LoginActivity.this,
+//                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+//
+//        emailView.setAdapter(adapter);
+//    }
 
     private boolean isEmailValid(String email) {
         return dbManager.validMail(email);

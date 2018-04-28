@@ -51,6 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS Category " );
         db.execSQL("DROP TABLE IF EXISTS Book " );
+        db.execSQL("DROP TABLE IF EXISTS Admin " );
         onCreate(db);
 
     }
@@ -268,7 +269,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean validMail(String mail) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor resultSet = db.rawQuery("Select * from Admin where email='"+mail+"'",null);
-        return resultSet != null;
+        if(resultSet != null){
+            if(resultSet.moveToFirst()) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean validPW(String mail, String pw) {
