@@ -1,5 +1,6 @@
 package com.example.library.sw_library.Views;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,10 +24,11 @@ public class LoginActivityTest {
 
     @Before
     public void setUp() {
-        emailView = findViewById(R.id.email);
-        passwordView = findViewById(R.id.pwd);
+        View view;
+        emailView = view.findViewById(R.id.email);
+        passwordView = view.findViewById(R.id.pwd);
 
-        signinButton = findViewById(R.id.signin_button);
+        signinButton = view.findViewById(R.id.signin_button);
     }
 
     @Test
