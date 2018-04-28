@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent mainIntent = new Intent(MainActivity.this,CategoryViewActivity.class);
+                mainIntent.putExtra("admin",false);
                 MainActivity.this.startActivity(mainIntent);
                 MainActivity.this.finish();
             }

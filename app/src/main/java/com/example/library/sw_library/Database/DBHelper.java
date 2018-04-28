@@ -1,6 +1,7 @@
 package com.example.library.sw_library.Database;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -55,12 +56,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
 
     }
-    public int addOneBook(String bookName, String authorName, int categoryId){
+    public void addOneBook(String bookName, String authorName, int categoryId){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query ="insert into Book values (null,\'"+bookName+"\',\'"+authorName +"\',"+categoryId+");";
-        Log.e("Query", "addOneBook: "+query );
-        db.execSQL(query);
-        return  0;
+        if (bookName!=null &&authorName !=null) {
+            String query = "insert into Book values (null,\'" + bookName + "\',\'" + authorName + "\'," + categoryId + ");";
+            Log.e("Query", "addOneBook: " + query);
+            db.execSQL(query);
+        }
     }
 
     /*fill the DB admins*/
@@ -294,4 +296,34 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public int getTotalNumBooks(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Long count = DatabaseUtils.queryNumEntries(db, "Book");
+        db.close();
+        return count.intValue();
+    }
+    public int getNumOfBooksOFCategory(Integer categoryId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Long count = DatabaseUtils.longForQuery(db, "SELECT COUNT (*) FROM Book  WHERE category_id =?",
+                new String[] { String.valueOf(categoryId) });
+        db.close();
+        return count.intValue();
+    }
+
+    public String getAuthorForBook(String bookName){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String authorsString="";
+        Cursor resultSet = db.rawQuery("Select * from Book where title =?", new String[] {bookName});
+        if (resultSet.moveToFirst()) {
+            do {
+                authorsString = resultSet.getString(resultSet.getColumnIndex("authors"));
+            } while (resultSet.moveToNext());
+        }
+
+        return authorsString;
+
+    }
+
 }
