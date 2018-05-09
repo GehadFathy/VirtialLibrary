@@ -21,11 +21,14 @@ public class CategoryViewActivity extends AppCompatActivity {
     private CategoryAdapter categoryAdapter;
     private DBHelper dbhelber;
     private boolean admin = false ;
+    private String admin_name = "" ;
+    private Menu dropDownMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
         admin =  getIntent().getExtras().getBoolean("admin");
+        admin_name =  getIntent().getExtras().getString("name");
         dbhelber = DBHelper.getInstance(this);
         categories = dbhelber.getCategories();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -59,12 +62,20 @@ public class CategoryViewActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.library, menu);
 
+        dropDownMenu = menu;
+
         //if not admin -> don't show add and remove options
         MenuItem item = menu.findItem(R.id.menu_add);
+        MenuItem item1 = menu.findItem(R.id.menu_login);
         MenuItem item2 = menu.findItem(R.id.menu_remove);
+
         if (!admin) {
             item.setVisible(false);
             item2.setVisible(false);
+        }
+        else {
+            getSupportActionBar().setTitle(admin_name);
+            item1.setTitle("Logout");
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -76,10 +87,22 @@ public class CategoryViewActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_login) {
             Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show();
-            Intent loginIntent = new Intent(
-                    CategoryViewActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
 
+            MenuItem item1 = dropDownMenu.findItem(R.id.menu_login);
+            MenuItem item2 = dropDownMenu.findItem(R.id.menu_remove);
+            MenuItem item3 = dropDownMenu.findItem(R.id.menu_add);
+            if(admin) {
+                getSupportActionBar().setTitle("Virtual Shelf Browser");
+                item1.setTitle("Login");
+                item3.setVisible(false);
+                item2.setVisible(false);
+                admin = false;
+            }
+            else {
+                Intent loginIntent = new Intent(
+                        CategoryViewActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
         }if (item.getItemId() == R.id.menu_add) {
             Intent loginIntent = new Intent(
                     CategoryViewActivity.this, AddBookActivity.class);

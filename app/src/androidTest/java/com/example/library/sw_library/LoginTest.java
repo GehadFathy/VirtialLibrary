@@ -1,15 +1,17 @@
-package com.example.library.sw_library.Database;
+package com.example.library.sw_library;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 
+import com.example.library.sw_library.Database.DBHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class DBHelperTest {
+public class LoginTest {
 
     private DBHelper dbHelper;
 

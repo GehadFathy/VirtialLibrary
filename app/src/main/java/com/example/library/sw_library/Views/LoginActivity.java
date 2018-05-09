@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -31,6 +32,8 @@ public class LoginActivity extends AppCompatActivity  {
     private EditText pwdView;
     private DBHelper dbManager;
     private LoginActivity.UserLoginTask mAuthTask = null;
+
+    public boolean isActive = false;
 
 
     @Override
@@ -94,11 +97,23 @@ public class LoginActivity extends AppCompatActivity  {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActive = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActive = false;
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Pair<Boolean, String>> {
 
         private final String mEmail;
         private final String mPassword;
@@ -109,21 +124,22 @@ public class LoginActivity extends AppCompatActivity  {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            return  isPasswordValid(mEmail, mPassword);
+        protected Pair<Boolean, String> doInBackground(Void... params) {
+            return  new Pair(isPasswordValid(mEmail, mPassword), mEmail);
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Pair<Boolean, String>  success) {
             mAuthTask = null;
 //            showProgress(false);
 
-            if(!success) {
+            if(!success.first) {
                 Toast.makeText(LoginActivity.this,"LOG IN FAILED",Toast.LENGTH_SHORT).show();
             }
 
             Intent intent=new Intent(LoginActivity.this,CategoryViewActivity.class);
-            intent.putExtra("admin",success);
+            intent.putExtra("admin",success.first);
+            intent.putExtra("name",success.second.split("@")[0]);
             startActivity(intent);
             finish();
         }
@@ -144,11 +160,11 @@ public class LoginActivity extends AppCompatActivity  {
 //        emailView.setAdapter(adapter);
 //    }
 
-    private boolean isEmailValid(String email) {
+    public boolean isEmailValid(String email) {
         return dbManager.validMail(email);
     }
 
-    private boolean isPasswordValid(String mail, String password) {
+    public boolean isPasswordValid(String mail, String password) {
         return dbManager.validPW(mail, password);
     }
 
