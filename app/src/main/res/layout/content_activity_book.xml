@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.library.sw_library.Views.BookViewActivity"
+    tools:showIn="@layout/activity_book">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="327dp"
+        android:layout_height="216dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@android:color/background_light"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="295dp" />
+
+    <TextView
+        android:id="@+id/authorTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/ISBNTextView"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="86dp" />
+
+    <TextView
+        android:id="@+id/categoryTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/authorTextView"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="186dp" />
+
+    <TextView
+        android:id="@+id/ISBNTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/linkTextView"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="136dp" />
+
+    <TextView
+        android:id="@+id/linkTextView"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        tools:layout_editor_absoluteX="213dp"
+        tools:layout_editor_absoluteY="36dp" />
+
+
+</RelativeLayout>
