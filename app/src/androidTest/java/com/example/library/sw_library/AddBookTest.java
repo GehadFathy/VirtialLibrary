@@ -4,6 +4,7 @@ package com.example.library.sw_library;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
 import com.example.library.sw_library.Database.DBHelper;
 import org.junit.Before;
@@ -59,7 +60,7 @@ public class AddBookTest {
 
             dbHelper.addOneBook("Book1","TestAuthor",2);
             String author = dbHelper.getAuthorForBook("Book1");
+
             assertEquals("TestAuthor", author);
      }
-
 }

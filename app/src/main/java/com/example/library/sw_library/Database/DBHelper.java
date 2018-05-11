@@ -59,23 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
 
     }
-    public void addOneBook(String bookName, String authorName, int categoryId){
-        SQLiteDatabase db = this.getWritableDatabase();
-        if (bookName!=null &&authorName !=null) {
-            db.execSQL("insert into Book values (null,\'" + bookName + "\'," + categoryId + ");");
 
-            int bookId=0;
-            Cursor resultSet =  db.rawQuery("SELECT MAX(id) AS LastID FROM Book;", null);
-            if (resultSet != null) {
-                if (resultSet.moveToFirst()) {
-                    do {
-                        bookId = resultSet.getInt(resultSet.getColumnIndex("LastID"));
-                    } while (resultSet.moveToNext());
-                }
-            }
-            db.execSQL("insert into BookAuthors values (" + bookId + ",\'" + authorName+ "\')");
-        }
-    }
 
     /*fill the DB admins*/
     public void fillAdmin(){
@@ -284,20 +268,48 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return count.intValue();
     }
-/*
+
     public String getAuthorForBook(String bookName){
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String authorsString="";
-        Cursor resultSet = db.rawQuery("Select * from Book where title =?", new String[] {bookName});
+        ArrayList<String> authors = new ArrayList<String>();
+        String authorsString = "";
+        Cursor resultSet = db.rawQuery("Select author_name from BookAuthors where book_id IN ( Select id from Book where title =?)", new String[] {bookName});
+
+
         if (resultSet.moveToFirst()) {
             do {
-                authorsString = resultSet.getString(resultSet.getColumnIndex("authors"));
+               String author = resultSet.getString(resultSet.getColumnIndex("author_name"));
+                authors.add (author);
+
             } while (resultSet.moveToNext());
         }
 
+        for (int i=0;i<authors.size();i++){
+            authorsString += authors.get(i);
+            if (i!=authors.size()-1){
+               authorsString += ",";
+            }
+        }
         return authorsString;
-
     }
-*/
+    public void addOneBook(String bookName, String authorName, int categoryId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (bookName!=null &&authorName !=null) {
+            db.execSQL("insert into Book values (null,\'" + bookName + "\'," + categoryId + ");");
+            int bookId=0;
+            Cursor resultSet =  db.rawQuery("SELECT MAX(id) AS LastID FROM Book;", null);
+            if (resultSet != null) {
+                if (resultSet.moveToFirst()) {
+                    do {
+                        bookId = resultSet.getInt(resultSet.getColumnIndex("LastID"));
+                    } while (resultSet.moveToNext());
+                }
+            }
+            String[]authors = authorName.split(",");
+            for (int i=0;i<authors.length;i++) {
+                db.execSQL("insert into BookAuthors values (" + bookId + ",\'" + authors[i] + "\')");
+            }
+        }
+    }
 }

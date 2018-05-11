@@ -59,8 +59,6 @@ public class CategoryViewActivity extends AppCompatActivity {
             }
         });
     }
-    @Override
-    public void onBackPressed() {}
     /*
     for login menu
      */

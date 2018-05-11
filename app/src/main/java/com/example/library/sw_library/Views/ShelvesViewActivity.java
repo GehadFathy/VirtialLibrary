@@ -13,15 +13,10 @@ import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.library.sw_library.Database.DBHelper;
-import com.example.library.sw_library.Models.BookModel;
 import com.example.library.sw_library.R;
 
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.Attributes;
 
 /*
 Shelves view class
