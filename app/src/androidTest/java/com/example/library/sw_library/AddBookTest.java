@@ -57,10 +57,8 @@ public class AddBookTest {
      }
     @Test
         public void additionIsTrue() throws Exception {
-
             dbHelper.addOneBook("Book1","TestAuthor",2);
             String author = dbHelper.getAuthorForBook("Book1");
-
             assertEquals("TestAuthor", author);
      }
 }
