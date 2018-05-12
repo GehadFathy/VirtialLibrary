@@ -193,7 +193,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] authorsList = authors.split("\\s*,\\s*");
         String values = "";
         for (int i=0;i<authorsList.length;i++){
-            values += "'" + authorsList[i].trim().toLowerCase() + "'";
+            values += "'" + authorsList[i].trim() + "'";
             if (i < authorsList.length-1){
                 values +=",";
             }
@@ -206,12 +206,13 @@ public class DBHelper extends SQLiteOpenHelper {
                             "(Select book_id from BookAuthors where author_name IN (" + values + "))) t1" +
                             " INNER JOIN (SELECT title from Book where title IN (\'"+title.trim()+"\')) t2 on t1.title = t2.title", null);
 
-
         }else if (title.length() == 0 && authors.length() > 0){
+            Log.d("Authorrrrrrrrrr", authors);
+            Log.d("Authorrrrrrrrrr", values);
             resultSet =
                     db.rawQuery("Select title from Book where id IN " +
                             "( Select book_id from BookAuthors where author_name IN (" + values + "))", null);
-
+            Log.d("size", resultSet.getCount()+"");
 
         }else if (title.length() > 0  && authors.length() ==0){
             resultSet = db.rawQuery("SELECT title FROM Book WHERE title IN (\'" + title.trim() + "\')",null);
@@ -312,4 +313,16 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
     }
+
+    /*remove book from DB*/
+    public int removeBook(String title){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int deleted=db.delete("Book","title" + "='" + title +"'",null);
+        Log.e("menna", "deleted: " + deleted);
+        return deleted;
+    }
+
+
+
+
 }

@@ -1,5 +1,4 @@
 package com.example.library.sw_library.Views;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.example.library.sw_library.R;
-
-
 import java.util.ArrayList;
 
 /*

@@ -59,9 +59,7 @@ public class CategoryViewActivity extends AppCompatActivity {
             }
         });
     }
-    /*
-    for login menu
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.library, menu);
@@ -112,6 +110,12 @@ public class CategoryViewActivity extends AppCompatActivity {
                     CategoryViewActivity.this, AddBookActivity.class);
             startActivity(loginIntent);
 
+        }
+        if (item.getItemId() == R.id.menu_remove) {
+            Intent removeIntent = new Intent(
+                    CategoryViewActivity.this, RemoveBookActivity.class);
+            removeIntent.putExtra("name",admin_name);
+            startActivity(removeIntent);
         }
 
         return true;

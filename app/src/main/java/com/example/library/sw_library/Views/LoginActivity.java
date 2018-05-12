@@ -1,18 +1,13 @@
 package com.example.library.sw_library.Views;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,7 +15,6 @@ import android.widget.Toast;
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
 
-import java.util.List;
 
 /**
  * A login screen that offers login via email/password.
