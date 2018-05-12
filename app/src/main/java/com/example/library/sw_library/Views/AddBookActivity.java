@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.library.sw_library.Database.DBHelper;
 import com.example.library.sw_library.R;
@@ -83,8 +84,23 @@ public class AddBookActivity extends AppCompatActivity implements AdapterView.On
                 }
 
                 else {
-                    dbHelper.addOneBook(bookName, authorName, getCategoryId(categoryName));
+                    int code = dbHelper.addOneBook(bookName, authorName, getCategoryId(categoryName));
+                    //Toast.makeText(getApplicationContext(),"code:: "+code,Toast.LENGTH_SHORT).show();
+                    if (code ==0)
+                        new AlertDialog.Builder(AddBookActivity.this)
+                                .setTitle("Warning")
+                                .setMessage("Book already exists")
+                                .setCancelable(false)
+                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Whatever...
+                                    }
+                                }).show();
+
                     Intent intent = new Intent(AddBookActivity.this, CategoryViewActivity.class);
+                    intent.putExtra("admin","true");
+                    intent.putExtra("name","gehad");
                     startActivity(intent);
                 }
             }

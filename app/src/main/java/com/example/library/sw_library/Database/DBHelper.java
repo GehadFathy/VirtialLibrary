@@ -292,9 +292,13 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return authorsString;
     }
-    public void addOneBook(String bookName, String authorName, int categoryId){
+    public int addOneBook(String bookName, String authorName, int categoryId){
         SQLiteDatabase db = this.getWritableDatabase();
         if (bookName!=null &&authorName !=null) {
+            //check if exists
+            if(bookExists(bookName))
+                return 0;
+
             db.execSQL("insert into Book values (null,\'" + bookName + "\'," + categoryId + ");");
             int bookId=0;
             Cursor resultSet =  db.rawQuery("SELECT MAX(id) AS LastID FROM Book;", null);
@@ -309,9 +313,18 @@ public class DBHelper extends SQLiteOpenHelper {
             for (int i=0;i<authors.length;i++) {
                 db.execSQL("insert into BookAuthors values (" + bookId + ",\'" + authors[i] + "\')");
             }
+            return 1;
         }
+        return 2;
     }
+    private boolean bookExists(String bookName){
+    SQLiteDatabase db = this.getReadableDatabase();
+        Cursor resultSet =  db.rawQuery( "Select * from Book where title =?",  new String[] { bookName});
+             if (resultSet.getCount()>0)
+                     return true;
+             return false ;
 
+    }
     /*remove book from DB*/
     public int removeBook(String title){
         SQLiteDatabase db = this.getWritableDatabase();

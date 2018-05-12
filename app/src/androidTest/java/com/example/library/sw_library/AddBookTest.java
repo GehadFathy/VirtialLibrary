@@ -37,14 +37,14 @@ public class AddBookTest {
     @Test
     public void additionIsCorrectForCategory() throws Exception {
         int countBefore =dbHelper.getNumOfBooksOFCategory(1);
-        dbHelper.addOneBook("Test","Test",1);
+        dbHelper.addOneBook("sw","sw",1);
         int countAfter =dbHelper.getNumOfBooksOFCategory(1);
         assertEquals(countBefore+1, countAfter);
     }
     @Test
     public void additionIsCorrectInTotal() throws Exception {
         int countBefore =dbHelper.getTotalNumBooks();
-        dbHelper.addOneBook("Test","Test",1);
+        dbHelper.addOneBook("sw2","Test",1);
         int countAfter =dbHelper.getTotalNumBooks();
         assertEquals(countBefore+1, countAfter);
     }
@@ -61,4 +61,11 @@ public class AddBookTest {
             String author = dbHelper.getAuthorForBook("Book1");
             assertEquals("TestAuthor", author);
      }
+
+    @Test
+    public void checkDuplicate() throws Exception {
+        int code =dbHelper.addOneBook("gehad","gehad",2);
+        int code2 =dbHelper.addOneBook("gehad","tests",5);
+        assertEquals(0, code2);
+    }
 }
