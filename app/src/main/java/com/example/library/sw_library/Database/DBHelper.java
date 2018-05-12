@@ -42,7 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table Admin (id integer primary key AUTOINCREMENT, name text,email text,pwd text);" );
         db.execSQL("create table Category (id integer primary key AUTOINCREMENT, name text);" );
         db.execSQL("create table Book (id integer primary key, title text, category_id integer," +
-                " foreign key (category_id) references Category(id)); ");
+                " foreign key (category_id) references Category(id) ON DELETE CASCADE); ");
         db.execSQL("create table BookAuthors (book_id integer, author_name text," +
                 " foreign key (book_id) references Book(id));");
 
@@ -207,8 +207,6 @@ public class DBHelper extends SQLiteOpenHelper {
                             " INNER JOIN (SELECT title from Book where title IN (\'"+title.trim()+"\')) t2 on t1.title = t2.title", null);
 
         }else if (title.length() == 0 && authors.length() > 0){
-            Log.d("Authorrrrrrrrrr", authors);
-            Log.d("Authorrrrrrrrrr", values);
             resultSet =
                     db.rawQuery("Select title from Book where id IN " +
                             "( Select book_id from BookAuthors where author_name IN (" + values + "))", null);
