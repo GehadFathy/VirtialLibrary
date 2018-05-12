@@ -99,7 +99,7 @@ public class AddBookActivity extends AppCompatActivity implements AdapterView.On
                                 }).show();
 
                     Intent intent = new Intent(AddBookActivity.this, CategoryViewActivity.class);
-                    intent.putExtra("admin","true");
+                    intent.putExtra("admin",true);
                     intent.putExtra("name","gehad");
                     startActivity(intent);
                 }
